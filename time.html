@@ -1,0 +1,393 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<META NAME="ROBOTS" CONTENT="NONE">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<!-- IE可能不見得有效 -->
+<META HTTP-EQUIV="EXPIRES" CONTENT="0">
+<!-- 設定成馬上就過期 -->
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<!-- 與第一行是同樣的作用 -->
+<title>C. W. Sham課程上課時刻表</title>
+<style type="text/css">
+
+th {background-color:#99FF00;border:1px solid #000000}
+td {position:relative;height:1.2em;border-style:dashed solid;border-color:#333333;border-width:1px;white-space:nowrap;padding:0;margin:0}
+
+.centre{height:1.5em;width:8.1em;border:solid #000000 0.1em;text-align:center;position:absolute;background-color:#99FF00;font-weight:bold}
+.timeBlock {height:5.9em;width:4.9em;border:solid #000000 0.1em;text-align:center;position:absolute;background-color:#FFFFFF;font-weight:bold}
+.lesson {position:absolute;background-color:#FFFFFF;text-align:center;border:0.1em solid #000000;width:8.1em}
+.repeated {background-color:#FFFF99;font-weight:bold}
+.timeSpan{font-size:0.8em}
+.horizontalRule{position:absolute;border-top:#000000 dashed 0.1em}
+.verticalRule{position:absolute;border-right:#000000 solid 0.1em}
+#timeTableHere {background:#669966;margin-bottom:2em;position:absolute;border:5px ridge #006600;border-bottom:10px ridge #006600;background: repeating-linear-gradient(45deg, #66CC66, #66CC66 3px, #669966 3px, #669966 6px)}
+#caption{margin:2em 0em 0em;font-size:1.3em;white-space:nowrap;position:relative;text-align:center;overflow:visible}
+
+#miniCal{empty-cells:hide;border-collapse:collapse;border:2px solid #000000;background:none;font-size:small;}
+#miniCal td{text-align:center;border:1px solid #000000;cursor:pointer}
+</style>
+<script type="text/javascript">
+function mLength(y,m){
+  var months=[31,28,31,30,31,30,31,31,30,31,30,31];
+  if (m!=1) return months[m];
+  else if (y%4!=0) return 28;
+  else if (y%100!=0 || y%400==0) return 29;
+  else return 28;
+}
+
+function goToDate(y,m,d){
+  Q=new Date(y,m-1,d);
+  qTable(Q);
+  CCalendarDraw(Q,1)
+}
+
+function CCalendarDraw(myDate,counter){
+  var y=myDate.getFullYear(); m=myDate.getMonth(); dd=myDate.getDate();
+  var findDay=new Date(myDate); findDay.setDate(1);
+  var week=findDay.getDay();
+  var d=mLength(y,m);
+  var temp="<table id='miniCal'>\n<tr><th>星期日</th><th>星期一</th><th>星期二</th><th>星期三</th><th>星期四</th><th>星期五</th><th>星期六</th></tr><tr>\n";
+  if (counter<1)
+    if (findDay.getMonth()==Q.getMonth() && findDay.getFullYear()==Q.getFullYear())
+      counter=1;  dd=Q.getDate();
+  if (week){
+    temp+='<td colspan="' + week+ '" class="noLink">&nbsp;</td>\n';
+  }
+  week=8-week;
+  week%=7;
+  for (var i=1; i<=d; i++){
+    if (i%7==week)  temp+="</tr><tr>\n";
+    temp+= '<td';
+    if (i==dd && counter>0){
+      temp+= ' style="background-color:#FFEE66;font-weight:bold"';
+      counter--;
+    }
+    temp+= ' onclick="goToDate(' + y + ',' + (m+1) + ',' + i + ')">' + i + "</td>\n";
+  }
+  week=(week+34-d)%7;
+  if (week)
+    temp+='<td colspan="' + week+ '" class="noLink">&nbsp;</td>\n';
+  temp+="</tr></table>";
+  document.getElementById("calendar").innerHTML=temp;
+  return d;
+}
+
+function goMonthNow(d){
+  thisYear=dateEntry.toYear.selectedIndex+2018;
+  thisMonth=dateEntry.toMonth.selectedIndex+d;
+  var Q=new Date(thisYear,thisMonth,1);
+  thisYear=Q.getFullYear();
+  thisMonth=Q.getMonth();
+  dateEntry.toYear.selectedIndex=thisYear-2018;
+  dateEntry.toMonth.selectedIndex=thisMonth;
+  CCalendarDraw(Q,-1)
+}
+
+/*************************************************/
+Q=new Date(); Q.setHours(0);
+var quarterField=1;          //資料陣列中的刻鐘數位置
+var lesson;
+var centreTable="";
+var centreNamesLetter="ABCDEFGHJKLMNPRSTWYZ";
+var centreNamesShort=["沙田","荃灣（中染）","銅鑼灣","荃灣（愉景）","安基苑","淘大二期","新都城","天后","信諾","旺角","銅鑼灣高威樓","尖沙咀","荃灣（海晴）","大埔","淘大四期","上水","屯門","北角","元正","怡和街"];
+
+timeColWidth=5;
+hourHeight=6;
+centreColWidth=8.2;
+centreCellHeight=1.6;
+borderWidth=0.1;
+
+//讀取課程時刻表總表XML資料
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  var xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.open("GET","fullTable.xml",false);
+xmlhttp.send();
+var xmlDoc=xmlhttp.responseXML;
+
+var allCourses=xmlDoc.getElementsByTagName("course");
+var modifyDate=xmlDoc.getElementsByTagName("modifyDate");
+// 試驗對時區的處理方式：Firefox、Opera自動把資料當成本地時區；Chrome把資料當成世界時刻時區
+var timeZone="2013-09-10T17:00:00"; //xmlDoc.getElementsByTagName("time")[0].firstChild.nodeValue;
+if ((new Date(timeZone)).getHours()!=(new Date(timeZone+"+08:00")).getHours())  timeZone="+08:00";
+else timeZone="";
+
+function pushData(myTime,lessonNo,timesR){
+
+//myTime → 該課堂的上課時刻
+//lessonNo → 第幾堂
+//timesR → 當天是否連上課
+
+  var myCourse=myTime.parentNode;
+  var myCentre=myCourse.getElementsByTagName("code")[0].firstChild.nodeValue.charAt(0); //檢查課程所屬分校
+
+  var arrayPos=centreTable.search(myCentre);
+  var myArray=new Array(6);
+
+  /*
+  輸入課堂資料
+  格式：上課時刻,時間,課程編號,課程類別,堂數,重複次數
+  */
+  myArray[0]=new Date(myTime.firstChild.nodeValue+timeZone);
+  myArray[1]=Number(myCourse.getElementsByTagName("duration")[0].firstChild.nodeValue);
+  myArray[2]=myCourse.getElementsByTagName("code")[0].firstChild.nodeValue;
+  myArray[3]=myCourse.getElementsByTagName("type")[0].firstChild.nodeValue;
+  myArray[4]=lessonNo;
+  myArray[5]=timesR;
+  if (arrayPos<0){                    //新加入一間分校
+//    lesson=lesson.concat([""]);
+//    lesson[lesson.length-1]=new Array(1);
+//    lesson[lesson.length-1][0]=myArray;
+    lesson.push([myArray]);
+    centreTable+=myCentre;
+  }else{                    //加到已存在的分校
+    lesson[arrayPos][lesson[arrayPos].length]=myArray;
+  }
+}
+function noOverlap(){
+  var startTime;        //下一節的開始時刻
+  var endTime;          //本節的結束時刻
+  var timeSpan;
+  for(var i=0; i<lesson.length; i++){
+    for(var j=1; j<lesson[i].length; j++){
+      endTime=new Date(lesson[i][j-1][0]);
+      timeSpan=Number(lesson[i][j-1][1]);
+      endTime.setMinutes(endTime.getMinutes()+timeSpan);
+      startTime=new Date(lesson[i][j][0]);
+      timeSpan=Number(lesson[i][j][5]);
+      if (timeSpan){
+        if (lesson[i][j-1][2]==lesson[i][j][2]){  //假如和上一節有相同的課程編號
+          lesson[i][j-1][5]=1;    //把上一節重複次數改成1
+        }else{
+          if (j>1 && lesson[i][j-2][2]==lesson[i][j][2]){
+            lesson[i][j-2][5]=1;    //把上二節重複次數改成1
+            move2NextCol(i,j-1);    //把上一節丟到下一欄
+          }else
+            move2NextCol(i,j);    //把自己丟到下一欄
+          j--;
+        }
+      }else{
+        if (endTime>startTime){
+          move2NextCol(i,j);    //把自己丟到下一欄
+          j--;
+        }
+      }
+    }
+  }
+}
+
+function move2NextCol(i,j){
+  if (centreTable.charAt(i)==centreTable.charAt(i+1))
+    lesson[i+1].push(lesson[i].splice(j,1)[0]);
+  else{
+    lesson.splice(i+1,0,lesson[i].splice(j,1));
+    centreTable=centreTable.replace(centreTable.charAt(i),centreTable.charAt(i)+centreTable.charAt(i));
+  }
+}
+
+function tableCap(Q){
+  var week="日一二三四五六".charAt(Q.getDay());
+  return Q.getFullYear()+"年"+(Q.getMonth()+1)+"月"+Q.getDate()+"日（星期"+week+"）";
+}
+
+function centreName(){
+  var temp="";
+  for (var i=0; i<centreTable.length; i++){
+    repeatNo=centreRepeat(i);
+    temp+="<div class='centre' style='left:"+(timeColWidth+i*centreColWidth)+"em;";
+    if (repeatNo){
+      temp+="width:"+((repeatNo+1)*centreColWidth-borderWidth)+"em;";
+      i+=repeatNo;
+    }
+    temp+= "'>"+centreNamesShort[centreNamesLetter.search(centreTable.charAt(i))]+"</div>";
+  }
+  return temp;
+}
+
+function centreRepeat(pos){
+  if (centreTable.charAt(pos)==centreTable.charAt(pos+1)) return 1+centreRepeat(pos+1);
+  else return 0;
+}
+
+function zeroFill(num){
+  if (num<10) return "0" + num;
+  else return num;
+}
+
+function timeAMPM(myTime){
+  var hours=myTime.getHours();
+  var mins=myTime.getMinutes();
+  if (hours>12)
+    return (hours-12)+":"+zeroFill(mins)+"pm";
+  else if (hours==12)
+    return "12:"+zeroFill(mins)+"pm";
+  else if (hours>0)
+    return hours+":"+zeroFill(mins)+"am";
+  else
+    return "12:"+zeroFill(mins)+"am";
+}
+
+function timeSpan(startTime,duration){
+  var temp=timeAMPM(startTime);
+  temp+="-";
+  var endTime=new Date(startTime);
+  endTime.setMinutes(endTime.getMinutes()+duration);
+  temp+=timeAMPM(endTime);
+  return temp;
+}
+
+function period(lessonNo){
+  var temp=Math.floor(lessonNo/4)+1 + ".";
+  return temp + (lessonNo%4 +1);
+}
+
+function minTime(lesson){
+  //找出最早的上課時刻
+  var earliest=new Date(lesson[0][0][0]);
+  for (var i=1; i<lesson.length; i++)
+    if (lesson[i][0][0]<earliest) earliest=new Date(lesson[i][0][0]);
+  return earliest.getHours();
+}
+
+function maxTime(lesson){
+  var duration=lesson[0][lesson[0].length-1][quarterField];      //課堂長度（分鐘）
+  var temp;
+  //找出最晚的上課時刻
+  var latest=new Date(lesson[0][lesson[0].length-1][0]);
+
+  latest.setMinutes(latest.getMinutes()+duration-1);
+  for (var i=1; i<lesson.length; i++){
+    duration=lesson[i][lesson[i].length-1][quarterField];
+    temp=new Date(lesson[i][lesson[i].length-1][0]);
+    temp.setMinutes(temp.getMinutes()+duration-1);
+    if (temp>latest) latest=temp;
+  }
+  latest.setMinutes(latest.getMinutes()-1);
+  return latest.getHours();
+}
+
+function drawTable(){
+  var duration;      //課堂長度（分鐘）
+  var myTop;
+
+  var earliest=minTime(lesson);
+  var latest=maxTime(lesson);
+  var totalRows=latest-earliest+1;
+  var curTime=new Date(lesson[0][0][0]);         //初始化時刻位置
+  var timeOffset=new Date(curTime.setHours(earliest));
+  var myLeft;
+
+  timeOffset.setMinutes(0);
+
+  myCaption.innerHTML=tableCap(Q);
+  temp="";
+
+  //畫出時刻格子表頭
+  myLeft=centreColWidth*lesson.length+timeColWidth;
+  for (var i=earliest; i<=latest; i++){
+    myTop=hourHeight*(i-earliest)+centreCellHeight;
+    timeOffset.setHours(i);
+    temp+="<div class='horizontalRule' style='top:"+myTop+"em;width:"+myLeft+"em'></div>";
+    temp+="<div class='timeBlock' style='top:"+myTop+"em'>"+timeAMPM(timeOffset)+"</div>";
+  }
+  myCaption.style.width=myLeft/1.3+"em";
+  timeTableDiv.style.width=myLeft+"em";
+  timeTableDiv.style.height=hourHeight*(latest-earliest+1)+centreCellHeight+"em";
+
+  timeOffset.setHours(earliest);
+  //畫出表格
+  //巡視時刻表內所有列，並畫出內容格子
+  for (var i=0; i<lesson.length;i++){
+    myLeft=centreColWidth*i+timeColWidth;
+    temp+='<div class="verticalRule" style="left:'+myLeft+'em;height:'+timeTableDiv.style.height+'"></div>';
+    for (var j=0; j<lesson[i].length;j++){
+      curTime=new Date(lesson[i][j][0]);
+      myTop=(curTime-timeOffset)*hourHeight/3600000+centreCellHeight;
+      duration=lesson[i][j][1]*hourHeight/60-borderWidth;
+      temp+='<div style="top:' + myTop + 'em;left:' + myLeft + 'em;height:' + duration + 'em" class="lesson';
+      if (lesson[i][j][5]>0) temp+=" repeated";
+      temp+='"><div style="display:table-cell;vertical-align:middle;height:' + duration + 'em;width:'+centreColWidth+'em">' + lesson[i][j][2]+"<br>"+lesson[i][j][3]+"<br>("+period(lesson[i][j][4])+")<br><span class='timeSpan'>"+timeSpan(curTime,lesson[i][j][1])+"</span></div></div>";
+    }
+  }
+  temp+=centreName();
+
+//更正編號
+//  temp=temp.replace(/F145IPF345/g,"R145IPF345");
+
+  timeTableDiv.innerHTML+=temp;
+}
+
+function qTable(qDate){
+  lesson=new Array(); centreTable="";
+   var tempDate; var counter;
+  //找出當天有課堂的課程
+  for (var i=0; i<allCourses.length; i++){
+    var j=0; var counter=0;
+    var theTime=allCourses[i].getElementsByTagName("time");
+    do{
+      tempDate=new Date(theTime[j].firstChild.nodeValue+timeZone);
+      tempDate.setHours(0);tempDate.setMinutes(0);
+      if (Math.floor(tempDate.valueOf()/86400000)==Math.floor(qDate.valueOf()/86400000)){
+        pushData(theTime[j],j,counter++);
+      }
+      j++;
+    }while(j<theTime.length);
+  }
+  if (lesson.length<1){
+    myCaption.style.width="0em";
+    myCaption.innerHTML="沒有"+tableCap(Q)+"的課堂資料。";
+    timeTableDiv.innerHTML="";
+    timeTableDiv.style.display="none";
+    return false;
+  }
+  timeTableDiv.style.display="block";
+  //排好上課時刻順序
+  for (i=0; i<lesson.length; i++)
+    lesson[i].sort();
+  noOverlap();
+
+  //畫表
+  timeTableDiv.innerHTML=""
+  drawTable();
+}
+
+</script></head>
+<body>
+<script type="text/javascript">
+var pageDate=new Date(document.lastModified);
+document.write("<div style='float:right'>XML資料庫修改日期：" + modifyDate[0].firstChild.nodeValue + "</div>");
+</script><div id="readingData" style="width:20em;background-color:#FF0000;color:#FFFF00;text-align:center">正從伺服器讀取資料，請稍候……</div>
+<form name="dateEntry"><input type="button" id="lMonth" name="lMonth" value="上一月(L)" onclick="goMonthNow(-1)" title="上一月" accesskey="l"><select id="toYear" name="toYear" onchange="CCalendarDraw(new Date(document.dateEntry.toYear.selectedIndex+2018,document.dateEntry.toMonth.selectedIndex,1),0)"><option>2018</option><option>2019</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option></select>年<select id="toMonth" name="toMonth" onchange="CCalendarDraw(new Date(document.dateEntry.toYear.selectedIndex+2018,document.dateEntry.toMonth.selectedIndex,1),0)"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>月<input type="button" name="nMonth" value="下一月(N)" onclick="goMonthNow(1)" title="下一月" accesskey="n"></form><p id="calendar"></p><input type="button" id="pDay" name="pDay" value="前一天(P)" onclick="moveDay(-1)" title="前一天" accesskey="p"><input type="button" id="tDay" name="tDay" value="今天(T)" onclick="todayTable()" title="今天" accesskey="t"><input type="button" id="fDay" name="fDay" value="下一天(F)" onclick="moveDay(1)" title="下一天" accesskey="f">
+<div id="caption"></div><div id="timeTableHere"></div><script type="text/javascript">
+  var timeTableDiv=document.getElementById("timeTableHere");
+  var myCaption=document.getElementById("caption");
+  qTable(Q);
+  var thisYear=Q.getFullYear(); var thisMonth=Q.getMonth();
+  dateEntry.toYear.selectedIndex=thisYear-2018;
+  dateEntry.toMonth.selectedIndex=thisMonth;
+  CCalendarDraw(Q,1)
+  document.getElementById("readingData").style.display = "none";
+  Q=new Date();
+  function moveDay(n){
+    Q.setDate(Q.getDate()+n);
+    goToDate(Q.getFullYear(),Q.getMonth()+1,Q.getDate());
+    CCalendarDraw(Q,1)
+    dateEntry.toYear.selectedIndex=Q.getFullYear()-2018;
+    dateEntry.toMonth.selectedIndex=Q.getMonth();
+  }
+  function todayTable(){
+    Q = new Date();  Q.setHours(0);
+    dateEntry.toYear.selectedIndex=Q.getFullYear()-2018;
+    dateEntry.toMonth.selectedIndex=Q.getMonth();
+    CCalendarDraw(Q,1);
+    goToDate(Q.getFullYear(),Q.getMonth()+1,Q.getDate());
+}
+</script>
+</body></html>
