@@ -76,12 +76,12 @@ function CCalendarDraw(myDate,counter){
 }
 
 function goMonthNow(d){
-  thisYear=dateEntry.toYear.selectedIndex+2018;
+  thisYear=dateEntry.toYear.selectedIndex+2022;
   thisMonth=dateEntry.toMonth.selectedIndex+d;
   var Q=new Date(thisYear,thisMonth,1);
   thisYear=Q.getFullYear();
   thisMonth=Q.getMonth();
-  dateEntry.toYear.selectedIndex=thisYear-2018;
+  dateEntry.toYear.selectedIndex=thisYear-2022;
   dateEntry.toMonth.selectedIndex=thisMonth;
   CCalendarDraw(Q,-1)
 }
@@ -92,7 +92,7 @@ var quarterField=1;          //資料陣列中的刻鐘數位置
 var lesson;
 var centreTable="";
 var centreNamesLetter="ABCDEFGHJKLMNPRSTWYZ";
-var centreNamesShort=["沙田","荃灣（中染）","銅鑼灣","荃灣（愉景）","Eastmark","淘大二期","新都城","天后","信諾","旺角","銅鑼灣高威樓","尖沙咀","荃灣（海晴）","大埔","淘大四期","上水","屯門","北角","元正","怡和街"];
+var centreNamesShort=["沙田","荃灣（中染）","銅鑼灣","荃灣（愉景）","Eastmark","淘大二期","新都城","天后","信諾","旺角","銅鑼灣高威樓","尖沙咀","港島東","大埔","淘大四期","上水","屯門","北角","元正","怡和街"];
 
 timeColWidth=5;
 hourHeight=6;
@@ -365,13 +365,13 @@ function qTable(qDate){
 var pageDate=new Date(document.lastModified);
 document.write("<div style='float:right'>XML資料庫修改日期：" + modifyDate[0].firstChild.nodeValue + "</div>");
 </script><div id="readingData" style="width:20em;background-color:#FF0000;color:#FFFF00;text-align:center">正從伺服器讀取資料，請稍候……</div>
-<form name="dateEntry"><input type="button" id="lMonth" name="lMonth" value="上一月(L)" onclick="goMonthNow(-1)" title="上一月" accesskey="l"><select id="toYear" name="toYear" onchange="CCalendarDraw(new Date(document.dateEntry.toYear.selectedIndex+2018,document.dateEntry.toMonth.selectedIndex,1),0)"><option>2018</option><option>2019</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option></select>年<select id="toMonth" name="toMonth" onchange="CCalendarDraw(new Date(document.dateEntry.toYear.selectedIndex+2018,document.dateEntry.toMonth.selectedIndex,1),0)"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>月<input type="button" name="nMonth" value="下一月(N)" onclick="goMonthNow(1)" title="下一月" accesskey="n"></form><p id="calendar"></p><input type="button" id="pDay" name="pDay" value="前一天(P)" onclick="moveDay(-1)" title="前一天" accesskey="p"><input type="button" id="tDay" name="tDay" value="今天(T)" onclick="todayTable()" title="今天" accesskey="t"><input type="button" id="fDay" name="fDay" value="下一天(F)" onclick="moveDay(1)" title="下一天" accesskey="f">
+<form name="dateEntry"><input type="button" id="lMonth" name="lMonth" value="上一月(L)" onclick="goMonthNow(-1)" title="上一月" accesskey="l"><select id="toYear" name="toYear" onchange="CCalendarDraw(new Date(document.dateEntry.toYear.selectedIndex+2022,document.dateEntry.toMonth.selectedIndex,1),0)"><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option><option>2027</option><option>2028</option><option>2029</option></select>年<select id="toMonth" name="toMonth" onchange="CCalendarDraw(new Date(document.dateEntry.toYear.selectedIndex+2022,document.dateEntry.toMonth.selectedIndex,1),0)"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>月<input type="button" name="nMonth" value="下一月(N)" onclick="goMonthNow(1)" title="下一月" accesskey="n"></form><p id="calendar"></p><input type="button" id="pDay" name="pDay" value="前一天(P)" onclick="moveDay(-1)" title="前一天" accesskey="p"><input type="button" id="tDay" name="tDay" value="今天(T)" onclick="todayTable()" title="今天" accesskey="t"><input type="button" id="fDay" name="fDay" value="下一天(F)" onclick="moveDay(1)" title="下一天" accesskey="f">
 <div id="caption"></div><div id="timeTableHere"></div><script type="text/javascript">
   var timeTableDiv=document.getElementById("timeTableHere");
   var myCaption=document.getElementById("caption");
   qTable(Q);
   var thisYear=Q.getFullYear(); var thisMonth=Q.getMonth();
-  dateEntry.toYear.selectedIndex=thisYear-2018;
+  dateEntry.toYear.selectedIndex=thisYear-2022;
   dateEntry.toMonth.selectedIndex=thisMonth;
   CCalendarDraw(Q,1)
   document.getElementById("readingData").style.display = "none";
@@ -380,12 +380,12 @@ document.write("<div style='float:right'>XML資料庫修改日期：" + modifyDa
     Q.setDate(Q.getDate()+n);
     goToDate(Q.getFullYear(),Q.getMonth()+1,Q.getDate());
     CCalendarDraw(Q,1)
-    dateEntry.toYear.selectedIndex=Q.getFullYear()-2018;
+    dateEntry.toYear.selectedIndex=Q.getFullYear()-2022;
     dateEntry.toMonth.selectedIndex=Q.getMonth();
   }
   function todayTable(){
     Q = new Date();  Q.setHours(0);
-    dateEntry.toYear.selectedIndex=Q.getFullYear()-2018;
+    dateEntry.toYear.selectedIndex=Q.getFullYear()-2022;
     dateEntry.toMonth.selectedIndex=Q.getMonth();
     CCalendarDraw(Q,1);
     goToDate(Q.getFullYear(),Q.getMonth()+1,Q.getDate());
