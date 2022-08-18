@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <timetable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<modifyDate>2022年7月20日</modifyDate>
-<course><code>D226SPFB19</code><type>S.4 Force IB</type><duration>75</duration><time>2022-07-20T13:15:00</time><time>2022-07-27T13:15:00</time><time>2022-08-03T13:15:00</time><time>2022-08-10T13:15:00</time><time>2022-08-17T13:15:00</time><time>2022-08-24T13:15:00</time><time>2022-08-31T13:15:00</time><time>2022-09-07T13:15:00</time><time>2022-09-14T13:15:00</time><time>2022-09-21T13:15:00</time></course></timetable>
+<modifyDate>2022年8月18日</modifyDate>
+<course><code>D226SPFB19</code><type>S.4 Force IB</type><duration>75</duration><time>2022-07-20T13:15:00</time><time>2022-07-27T13:15:00</time><time>2022-08-03T13:15:00</time><time>2022-08-10T13:15:00</time><time>2022-08-17T13:15:00</time></course></timetable>
