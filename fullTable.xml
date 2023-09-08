@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <timetable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <modifyDate>2023年9月8日</modifyDate>
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<timetable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<modifyDate>2023年9月8日</modifyDate>
 <course><code>T236SPFA11</code><type>S.4 Force IA</type><duration>75</duration><time>2023-07-13T11:45:00</time><time>2023-07-13T13:15:00</time><time>2023-07-20T11:45:00</time><time>2023-07-20T13:15:00</time><time>2023-07-27T11:45:00</time><time>2023-07-27T13:15:00</time></course>
 <course><code>G236SPFA14</code><type>S.4 Force IA</type><duration>75</duration><time>2023-07-24T19:15:00</time><time>2023-07-24T20:45:00</time><time>2023-07-31T19:15:00</time><time>2023-07-31T20:45:00</time><time>2023-08-07T19:15:00</time><time>2023-08-07T20:45:00</time><time>2023-08-14T19:15:00</time><time>2023-08-14T20:45:00</time></course>
 <course><code>G236SPFB23</code><type>S.4 Force IB</type><duration>75</duration><time>2023-07-24T16:15:00</time><time>2023-07-31T16:15:00</time><time>2023-08-07T16:15:00</time><time>2023-08-14T16:15:00</time><time>2023-08-21T14:45:00</time><time>2023-08-21T16:15:00</time></course>
