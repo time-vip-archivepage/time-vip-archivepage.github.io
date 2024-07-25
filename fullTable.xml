@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <timetable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<modifyDate>2024年7月19日</modifyDate>
+<modifyDate>2024年7月25日</modifyDate>
 <course><code>Y246SPH110</code><type>Heat I</type><duration>75</duration><time>2024-07-22T11:45:00</time><time>2024-07-29T11:45:00</time><time>2024-08-05T11:45:00</time><time>2024-08-12T11:45:00</time><time>2024-08-19T11:45:00</time><time>2024-08-26T11:45:00</time><time>2024-09-02T11:45:00</time><time>2024-09-09T11:45:00</time></course>
 <course><code>K246SPH113</code><type>Heat I</type><duration>75</duration><time>2024-07-16T16:15:00</time><time>2024-07-23T16:15:00</time><time>2024-07-30T16:15:00</time><time>2024-08-06T16:15:00</time><time>2024-08-13T16:15:00</time><time>2024-08-20T16:15:00</time><time>2024-08-27T16:15:00</time><time>2024-09-03T16:15:00</time></course>
 <course><code>G246SPH114</code><type>Heat I</type><duration>75</duration><time>2024-07-16T14:45:00</time><time>2024-07-23T14:45:00</time><time>2024-07-30T14:45:00</time><time>2024-08-06T14:45:00</time><time>2024-08-13T14:45:00</time><time>2024-08-20T14:45:00</time><time>2024-08-27T14:45:00</time><time>2024-09-03T14:45:00</time></course>
@@ -29,7 +29,6 @@
 <course><code>T246SPH247</code><type>S.5 Heat II</type><duration>75</duration><time>2024-08-04T13:15:00</time><time>2024-08-11T13:15:00</time><time>2024-08-18T13:15:00</time><time>2024-08-25T13:15:00</time></course>
 <course><code>D246SPH248</code><type>S.5 Heat II</type><duration>75</duration><time>2024-07-30T14:45:00</time><time>2024-08-06T14:45:00</time><time>2024-08-13T14:45:00</time><time>2024-08-20T14:45:00</time></course>
 <course><code>K246SPH249</code><type>S.5 Heat II</type><duration>75</duration><time>2024-08-03T17:45:00</time><time>2024-08-10T17:45:00</time><time>2024-08-17T17:45:00</time><time>2024-08-24T17:45:00</time></course>
-<course><code>G246SPH250</code><type>S.5 Heat II</type><duration>75</duration><time>2024-07-29T14:45:00</time><time>2024-08-05T14:45:00</time><time>2024-08-12T14:45:00</time><time>2024-08-19T14:45:00</time></course>
 <course><code>E246SPH251</code><type>S.5 Heat II</type><duration>75</duration><time>2024-07-31T19:15:00</time><time>2024-08-07T19:15:00</time><time>2024-08-14T19:15:00</time><time>2024-08-21T19:15:00</time></course>
 <course><code>F246SPH252</code><type>S.5 Heat II</type><duration>75</duration><time>2024-08-04T16:15:00</time><time>2024-08-11T16:15:00</time><time>2024-08-18T16:15:00</time><time>2024-08-25T16:15:00</time></course>
 <course><code>N246SPH253</code><type>S.5 Heat II</type><duration>75</duration><time>2024-07-31T13:15:00</time><time>2024-08-07T13:15:00</time><time>2024-08-14T13:15:00</time><time>2024-08-21T13:15:00</time></course>
